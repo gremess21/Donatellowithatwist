@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donatello's with a Twist | Fusion Cuisine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#16a34a',
+                        dark: '#0f172a',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .menu-category {
+            scroll-margin-top: 100px;
+        }
+        .cart-item-enter {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        .cart-item-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 300ms ease-out;
+        }
+        .cart-item-exit {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .cart-item-exit-active {
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 300ms ease-out;
+        }
+        .floating-label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background-color: #0f172a;
+            padding: 0 5px;
+            font-size: 0.8rem;
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-dark border-b border-primary sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-utensils text-primary text-2xl"></i>
+                <a href="#" class="text-2xl font-bold text-light hover:text-primary transition">
+                    <span class="text-primary">Donatello's</span> with a Twist
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#home" class="hover:text-primary transition">Home</a>
+                <a href="#menu" class="hover:text-primary transition">Menu</a>
+                <a href="#catering" class="hover:text-primary transition">Catering</a>
+                <a href="#about" class="hover:text-primary transition">About</a>
+                <a href="#contact" class="hover:text-primary transition">Contact</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="cartBtn" class="relative text-light hover:text-primary transition">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-primary text-dark rounded-full w-5 h-5 flex items-center justify-center text-xs">0</span>
+                </button>
+                <button id="mobileMenuBtn" class="md:hidden text-light hover:text-primary transition">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-dark border-t border-primary py-2 px-4">
+            <div class="flex flex-col space-y-3">
+                <a href="#home" class="hover:text-primary transition">Home</a>
+                <a href="#menu" class="hover:text-primary transition">Menu</a>
+                <a href="#catering" class="hover:text-primary transition">Catering</a>
+                <a href="#about" class="hover:text-primary transition">About</a>
+                <a href="#contact" class="hover:text-primary transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center bg-cover bg-center" style="background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4">
+                <span class="text-primary">Donatello's</span> with a <span class="text-secondary">Twist</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Where Hispanic, Italian & American flavors dance together in perfect harmony</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#menu" class="bg-primary hover:bg-red-700 text-dark font-bold py-3 px-6 rounded-lg transition">Order Now</a>
+                <a href="#catering" class="bg-secondary hover:bg-green-700 text-dark font-bold py-3 px-6 rounded-lg transition">Book Catering</a>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-0 right-0 flex justify-center">
+            <a href="#menu" class="text-light hover:text-primary animate-bounce">
+                <i class="fas fa-chevron-down text-3xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-16 bg-dark">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Our <span class="text-primary">Menu</span></h2>
+                <p class="text-lg max-w-2xl mx-auto">Explore our fusion of flavors from three culinary traditions</p>
+            </div>
+            
+            <!-- Menu Categories Navigation -->
+            <div class="flex overflow-x-auto pb-4 mb-8 scrollbar-hide">
+                <div class="flex space-x-2">
+                    <button onclick="filterMenu('all')" class="category-btn bg-primary text-dark px-4 py-2 rounded-full font-medium whitespace-nowrap">All Items</button>
+                    <button onclick="filterMenu('hispanic')" class="category-btn bg-dark border border-primary text-light px-4 py-2 rounded-full font-medium whitespace-nowrap hover:bg-primary hover:text-dark transition">Hispanic</button>
+                    <button onclick="filterMenu('italian')" class="category-btn bg-dark border border-primary text-light px-4 py-2 rounded-full font-medium whitespace-nowrap hover:bg-primary hover:text-dark transition">Italian</button>
+                    <button onclick="filterMenu('american')" class="category-btn bg-dark border border-primary text-light px-4 py-2 rounded-full font-medium whitespace-nowrap hover:bg-primary hover:text-dark transition">American</button>
+                    <button onclick="filterMenu('appetizers')" class="category-btn bg-dark border border-primary text-light px-4 py-2 rounded-full font-medium whitespace-nowrap hover:bg-primary hover:text-dark transition">Appetizers</button>
+                    <button onclick="filterMenu('desserts')" class="category-btn bg-dark border border-primary text-light px-4 py-2 rounded-full font-medium whitespace-nowrap hover:bg-primary hover:text-dark transition">Desserts</button>
+                    <button onclick="filterMenu('drinks')" class="category-btn bg-dark border border-primary text-light px-4 py-2 rounded-full font-medium whitespace-nowrap hover:bg-primary hover:text-dark transition">Drinks</button>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="mb-8 max-w-md mx-auto">
+                <div class="relative">
+                    <input type="text" id="menuSearch" placeholder="Search menu items..." class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                    <i class="fas fa-search absolute right-3 top-3 text-primary"></i>
+                </div>
+            </div>
+            
+            <!-- Menu Items -->
+            <div id="menuItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Menu items will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Catering Section -->
+    <section id="catering" class="py-16 bg-dark border-t border-primary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Catering <span class="text-secondary">Services</span></h2>
+                <p class="text-lg max-w-2xl mx-auto">Let us bring the Donatello's experience to your special event</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Catering Service" class="rounded-lg shadow-lg w-full">
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-primary">Custom Catering Packages</h3>
+                    <p class="mb-6">Our catering service brings the unique flavors of Donatello's with a Twist to your events, whether it's a corporate gathering, wedding, or private party. We offer customizable menus to suit your needs.</p>
+                    
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold mb-3 text-secondary">Popular Catering Options:</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-secondary mt-1 mr-2"></i>
+                                <span>Full-service catering with staff</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-secondary mt-1 mr-2"></i>
+                                <span>Drop-off catering with disposable servingware</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-secondary mt-1 mr-2"></i>
+                                <span>Custom menu development</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-secondary mt-1 mr-2"></i>
+                                <span>Beverage service options</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <button id="openCateringForm" class="bg-secondary hover:bg-green-700 text-dark font-bold py-3 px-6 rounded-lg transition">Request Catering Quote</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-dark border-t border-primary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Our <span class="text-primary">Story</span></h2>
+                <p class="text-lg max-w-2xl mx-auto">The journey of Donatello's with a Twist</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1">
+                    <h3 class="text-2xl font-bold mb-4 text-primary">A Fusion of Cultures</h3>
+                    <p class="mb-4">Founded in 2010 by Chef Donatello Rodriguez, our restaurant was born from a passion for blending the rich culinary traditions of Hispanic, Italian, and American cuisines.</p>
+                    <p class="mb-6">What started as a small family restaurant has grown into a beloved local institution, known for its innovative dishes that honor tradition while embracing creativity.</p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center bg-dark border border-primary rounded-lg p-3">
+                            <i class="fas fa-award text-primary text-2xl mr-3"></i>
+                            <div>
+                                <h4 class="font-bold">Best Fusion Restaurant</h4>
+                                <p class="text-sm">City Eats Magazine 2022</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center bg-dark border border-primary rounded-lg p-3">
+                            <i class="fas fa-star text-primary text-2xl mr-3"></i>
+                            <div>
+                                <h4 class="font-bold">4.9/5 Stars</h4>
+                                <p class="text-sm">500+ Reviews</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Chef Donatello" class="rounded-lg shadow-lg w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-dark border-t border-primary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Contact <span class="text-primary">Us</span></h2>
+                <p class="text-lg max-w-2xl mx-auto">We'd love to hear from you</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-primary">Visit Us</h3>
+                    <div class="mb-6">
+                        <div class="flex items-start mb-4">
+                            <i class="fas fa-map-marker-alt text-secondary mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold">Location</h4>
+                                <p>123 Fusion Avenue, Culinary District</p>
+                                <p>New York, NY 10001</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start mb-4">
+                            <i class="fas fa-phone-alt text-secondary mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold">Phone</h4>
+                                <p>(212) 555-7890</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-envelope text-secondary mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold">Email</h4>
+                                <p>info@donatellostwist.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-4 text-primary">Hours</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span>Monday - Thursday</span>
+                            <span>11:00 AM - 10:00 PM</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Friday - Saturday</span>
+                            <span>11:00 AM - 11:00 PM</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Sunday</span>
+                            <span>12:00 PM - 9:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-primary">Send a Message</h3>
+                    <form id="contactForm" class="space-y-4">
+                        <div class="relative">
+                            <input type="text" id="contactName" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                            <label for="contactName" class="floating-label">Name</label>
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="contactEmail" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                            <label for="contactEmail" class="floating-label">Email</label>
+                        </div>
+                        <div class="relative">
+                            <input type="tel" id="contactPhone" class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                            <label for="contactPhone" class="floating-label">Phone (optional)</label>
+                        </div>
+                        <div class="relative">
+                            <textarea id="contactMessage" rows="4" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                            <label for="contactMessage" class="floating-label">Message</label>
+                        </div>
+                        <button type="submit" class="bg-primary hover:bg-red-700 text-dark font-bold py-3 px-6 rounded-lg transition w-full">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark border-t border-primary py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-primary">Donatello's with a Twist</h3>
+                    <p class="mb-4">Bringing together the best of Hispanic, Italian, and American cuisines in every bite.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-light hover:text-primary transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-light hover:text-primary transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-light hover:text-primary transition"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-primary">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-primary transition">Home</a></li>
+                        <li><a href="#menu" class="hover:text-primary transition">Menu</a></li>
+                        <li><a href="#catering" class="hover:text-primary transition">Catering</a></li>
+                        <li><a href="#about" class="hover:text-primary transition">About Us</a></li>
+                        <li><a href="#contact" class="hover:text-primary transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-primary">Newsletter</h3>
+                    <p class="mb-4">Subscribe to our newsletter for special offers and updates.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="bg-dark border border-primary rounded-l-lg py-2 px-4 text-light focus:outline-none w-full">
+                        <button type="submit" class="bg-primary hover:bg-red-700 text-dark font-bold py-2 px-4 rounded-r-lg transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-primary mt-8 pt-6 text-center">
+                <p>&copy; 2023 Donatello's with a Twist. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-end">
+        <div class="bg-dark w-full max-w-md h-full overflow-y-auto border-l border-primary">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-primary">Your Order</h3>
+                    <button id="closeCartBtn" class="text-light hover:text-primary transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="cartItems" class="mb-6 space-y-4">
+                    <!-- Cart items will be dynamically inserted here -->
+                    <div id="emptyCartMessage" class="text-center py-8">
+                        <i class="fas fa-shopping-cart text-4xl text-primary mb-4"></i>
+                        <p>Your cart is empty</p>
+                        <a href="#menu" class="text-primary hover:underline mt-2 inline-block">Browse our menu</a>
+                    </div>
+                </div>
+                
+                <div class="border-t border-primary pt-4 mb-6">
+                    <div class="flex justify-between mb-2">
+                        <span>Subtotal:</span>
+                        <span id="cartSubtotal">$0.00</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span>Tax (8.875%):</span>
+                        <span id="cartTax">$0.00</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg">
+                        <span>Total:</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                </div>
+                
+                <div id="checkoutSection">
+                    <h4 class="font-bold mb-3 text-primary">Delivery Information</h4>
+                    <form id="checkoutForm" class="space-y-4 mb-6">
+                        <div class="relative">
+                            <input type="text" id="deliveryName" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                            <label for="deliveryName" class="floating-label">Full Name</label>
+                        </div>
+                        <div class="relative">
+                            <input type="tel" id="deliveryPhone" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                            <label for="deliveryPhone" class="floating-label">Phone Number</label>
+                        </div>
+                        <div class="relative">
+                            <textarea id="deliveryAddress" rows="2" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                            <label for="deliveryAddress" class="floating-label">Delivery Address</label>
+                        </div>
+                        <div class="relative">
+                            <textarea id="deliveryNotes" rows="2" class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                            <label for="deliveryNotes" class="floating-label">Special Instructions (optional)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="deliveryAgreement" required class="mr-2">
+                            <label for="deliveryAgreement">I agree to the terms and conditions</label>
+                        </div>
+                    </form>
+                    
+                    <button id="placeOrderBtn" class="bg-primary hover:bg-red-700 text-dark font-bold py-3 px-6 rounded-lg transition w-full">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Catering Form Modal -->
+    <div id="cateringModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-dark w-full max-w-2xl rounded-lg border border-primary p-6 mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-primary">Catering Request</h3>
+                <button id="closeCateringForm" class="text-light hover:text-primary transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="cateringForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="relative">
+                        <input type="text" id="cateringName" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                        <label for="cateringName" class="floating-label">Name</label>
+                    </div>
+                    <div class="relative">
+                        <input type="email" id="cateringEmail" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                        <label for="cateringEmail" class="floating-label">Email</label>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="relative">
+                        <input type="tel" id="cateringPhone" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                        <label for="cateringPhone" class="floating-label">Phone</label>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="cateringCompany" class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                        <label for="cateringCompany" class="floating-label">Company (if applicable)</label>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="relative">
+                        <input type="date" id="cateringDate" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                        <label for="cateringDate" class="floating-label">Event Date</label>
+                    </div>
+                    <div class="relative">
+                        <input type="number" id="cateringGuests" required min="10" class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary">
+                        <label for="cateringGuests" class="floating-label">Number of Guests</label>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <textarea id="cateringDetails" rows="4" required class="w-full bg-dark border border-primary rounded-lg py-2 px-4 text-light focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                    <label for="cateringDetails" class="floating-label">Event Details (type, location, dietary restrictions, etc.)</label>
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" id="cateringAgreement" required class="mr-2">
+                    <label for="cateringAgreement">I agree to the catering terms and conditions</label>
+                </div>
+                
+                <button type="submit" class="bg-secondary hover:bg-green-700 text-dark font-bold py-3 px-6 rounded-lg transition w-full">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div id="orderConfirmation" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-dark rounded-lg border border-primary p-8 max-w-md mx-4 text-center">
+            <div class="text-5xl text-primary mb-4">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">Order Confirmed!</h3>
+            <p class="mb-6">Thank you for your order. We'll contact you shortly to confirm the details.</p>
+            <button id="closeOrderConfirmation" class="bg-primary hover:bg-red-700 text-dark font-bold py-2 px-6 rounded-lg transition">Continue Browsing</button>
+        </div>
+    </div>
+
+    <!-- Catering Confirmation Modal -->
+    <div id="cateringConfirmation" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-dark rounded-lg border border-primary p-8 max-w-md mx-4 text-center">
+            <div class="text-5xl text-secondary mb-4">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">Request Received!</h3>
+            <p class="mb-6">Thank you for your catering inquiry. Our team will review your request and contact you within 24 hours.</p>
+            <button id="closeCateringConfirmation" class="bg-secondary hover:bg-green-700 text-dark font-bold py-2 px-6 rounded-lg transition">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Menu Data
+        const menuItems = [
+            // Hispanic
+            { id: 1, name: "Twisted Tacos", description: "Soft corn tortillas with your choice of carne asada, al pastor, or grilled veggies, topped with our signature fusion slaw", price: 12.99, category: "hispanic appetizers", image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" },
+            { id: 2, name: "Paella Fusion", description: "Spanish paella with Italian sausage and American-style smoked chicken, saffron rice with seafood mix", price: 24.99, category: "hispanic", image: "https://images.unsplash.com/photo-1615870216519-2f9fa575fa5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80" },
+            { id: 3, name: "Churro Cannoli", description: "Mexican churros filled with sweet Italian cannoli cream, dusted with cinnamon sugar", price: 8.99, category: "hispanic italian desserts", image: "https://images.unsplash.com/photo-1589984662646-e7f2f17d6a5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" },
+            
+            // Italian
+            { id: 4, name: "Pasta Fiesta", description: "Al dente pasta with chorizo, roasted peppers, and a creamy chipotle alfredo sauce", price: 18.99, category: "italian hispanic", image: "https://images.unsplash.com/photo-1611270629569-8b357cb88da9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" },
+            { id: 5, name: "Pizza Mexicana", description: "Wood-fired pizza with refried beans, mozzarella, chorizo, jalapeños, and avocado crema", price: 16.99, category: "italian hispanic", image: "https://images.unsplash.com/photo-1593504049359-74330189a345?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1527&q=80" },
+            { id: 6, name: "Tiramisu Tres Leches", description: "Classic Italian tiramisu meets Latin tres leches cake - a coffee lover's dream", price: 9.99, category: "italian hispanic desserts", image: "https://images.unsplash.com/photo-1626804471359-3a98a2d7ef2e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" },
+            
+            // American
+            { id: 7, name: "BBQ Brisket Tacos", description: "Texas-style smoked brisket in flour tortillas with coleslaw and house BBQ sauce", price: 14.99, category: "american hispanic", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80" },
+            { id: 8, name: "Mac & Cheese Arancini", description: "American mac & cheese balls with Italian arancini technique, served with marinara", price: 10.99, category: "american italian appetizers", image: "https://images.unsplash.com/photo-1632818924360-68d4994cfdb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" },
+            { id: 9, name: "Apple Empanada", description: "Classic American apple pie filling in a Latin empanada crust with vanilla gelato", price: 8.99, category: "american hispanic desserts", image: "https://images.unsplash.com/photo-1562440499-851c1e3b3137?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" },
+            
+            // Drinks
+            { id: 10, name: "Horchata Cold Brew", description: "Creamy horchata meets cold brew coffee over ice", price: 5.99, category: "drinks", image: "https://images.unsplash.com/photo-1551029506-0803df4c203d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1473&q=80" },
+            { id: 11, name: "Sangria Spritz", description: "Spanish sangria meets Italian Aperol spritz with seasonal fruits", price: 8.99, category: "drinks", image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" },
+            { id: 12, name: "Mexican Mule", description: "American Moscow mule with tequila, ginger beer, and lime", price: 9.99, category: "drinks", image: "https://images.unsplash.com/photo-1514362545857-3bc1c10ddfdc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" }
+        ];
+
+        // Shopping Cart
+        let cart = [];
+        
+        // DOM Elements
+        const menuItemsContainer = document.getElementById('menuItems');
+        const cartItemsContainer = document.getElementById('cartItems');
+        const emptyCartMessage = document.getElementById('emptyCartMessage');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartTax = document.getElementById('cartTax');
+        const cartTotal = document.getElementById('cartTotal');
+        const cartCount = document.getElementById('cartCount');
+        const cartModal = document.getElementById('cartModal');
+        const cartBtn = document.getElementById('cartBtn');
+        const closeCartBtn = document.getElementById('closeCartBtn');
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const orderConfirmation = document.getElementById('orderConfirmation');
+        const closeOrderConfirmation = document.getElementById('closeOrderConfirmation');
+        const cateringModal = document.getElementById('cateringModal');
+        const openCateringForm = document.getElementById('openCateringForm');
+        const closeCateringForm = document.getElementById('closeCateringForm');
+        const cateringForm = document.getElementById('cateringForm');
+        const cateringConfirmation = document.getElementById('cateringConfirmation');
+        const closeCateringConfirmation = document.getElementById('closeCateringConfirmation');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuSearch = document.getElementById('menuSearch');
+        const contactForm = document.getElementById('contactForm');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMenuItems(menuItems);
+            setupEventListeners();
+        });
+
+        // Render menu items
+        function renderMenuItems(items) {
+            menuItemsContainer.innerHTML = '';
+            
+            if (items.length === 0) {
+                menuItemsContainer.innerHTML = '<p class="col-span-3 text-center py-8">No items found matching your search.</p>';
+                return;
+            }
+            
+            items.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'bg-dark border border-primary rounded-lg overflow-hidden hover:shadow-lg transition';
+                menuItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">${item.name}</h3>
+                            <span class="text-primary font-bold">$${item.price.toFixed(2)}</span>
+                        </div>
+                        <p class="text-gray-400 mb-4">${item.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs bg-dark border border-primary rounded-full px-3 py-1">${item.category.split(' ')[0].charAt(0).toUpperCase() + item.category.split(' ')[0].slice(1)}</span>
+                            <button onclick="addToCart(${item.id})" class="bg-primary hover:bg-red-700 text-dark font-bold py-2 px-4 rounded-lg transition">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                menuItemsContainer.appendChild(menuItem);
+            });
+        }
+
+        // Filter menu by category
+        function filterMenu(category) {
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(category) && category !== 'all') {
+                    btn.classList.remove('bg-dark', 'text-light');
+                    btn.classList.add('bg-primary', 'text-dark');
+                } else if (category === 'all' && btn.textContent === 'All Items') {
+                    btn.classList.remove('bg-dark', 'text-light');
+                    btn.classList.add('bg-primary', 'text-dark');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-dark');
+                    btn.classList.add('bg-dark', 'text-light');
+                }
+            });
+            
+            if (category === 'all') {
+                renderMenuItems(menuItems);
+                return;
+            }
+            
+            const filteredItems = menuItems.filter(item => item.category.includes(category));
+            renderMenuItems(filteredItems);
+        }
+
+        // Search menu items
+        menuSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredItems = menuItems.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) || 
+                item.description.toLowerCase().includes(searchTerm) ||
+                item.category.toLowerCase().includes(searchTerm)
+            );
+            renderMenuItems(filteredItems);
+        });
+
+        // Add to cart
+        function addToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            const existingItem = cart.find(i => i.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            
+            updateCart();
+            showCartNotification();
+        }
+
+        // Update cart UI
+        function updateCart() {
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                checkoutForm.style.display = 'none';
+            } else {
+                emptyCartMessage.style.display = 'none';
+                checkoutForm.style.display = 'block';
+                
+                cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'flex justify-between items-center border-b border-primary pb-4';
+                    cartItem.innerHTML = `
+                        <div class="flex items-center space-x-4">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                            <div>
+                                <h4 class="font-bold">${item.name}</h4>
+                                <p class="text-sm text-gray-400">$${item.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="updateQuantity(${item.id}, -1)" class="bg-dark hover:bg-gray-800 text-light w-8 h-8 rounded-full flex items-center justify-center transition">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)" class="bg-dark hover:bg-gray-800 text-light w-8 h-8 rounded-full flex items-center justify-center transition">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button onclick="removeFromCart(${item.id})" class="text-primary hover:text-red-700 transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+            }
+            
+            // Update totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.08875;
+            const total = subtotal + tax;
+            
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            cartTax.textContent = `$${tax.toFixed(2)}`;
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+            
+            // Update cart count
+            const itemCount = cart.reduce((count, item) => count + item.quantity, 0);
+            cartCount.textContent = itemCount;
+        }
+
+        // Update item quantity
+        function updateQuantity(itemId, change) {
+            const item = cart.find(i => i.id === itemId);
+            item.quantity += change;
+            
+            if (item.quantity <= 0) {
+                removeFromCart(itemId);
+            } else {
+                updateCart();
+            }
+        }
+
+        // Remove item from cart
+        function removeFromCart(itemId) {
+            cart = cart.filter(i => i.id !== itemId);
+            updateCart();
+        }
+
+        // Show cart notification
+        function showCartNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-primary text-dark px-4 py-2 rounded-lg shadow-lg flex items-center';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle mr-2"></i>
+                <span>Item added to cart</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Place order
+        placeOrderBtn.addEventListener('click', function() {
+            if (cart.length === 0) return;
+            
+            // Validate form
+            const name = document.getElementById('deliveryName').value;
+            const phone = document.getElementById('deliveryPhone').value;
+            const address = document.getElementById('deliveryAddress').value;
+            const agreement = document.getElementById('deliveryAgreement').checked;
+            
+            if (!name || !phone || !address || !agreement) {
+                alert('Please fill out all required fields and agree to the terms.');
+                return;
+            }
+            
+            // In a real app, you would send this data to your backend
+            console.log('Order placed:', {
+                items: cart,
+                customer: { name, phone, address },
+                notes: document.getElementById('deliveryNotes').value,
+                subtotal: cartSubtotal.textContent,
+                tax: cartTax.textContent,
+                total: cartTotal.textContent
+            });
+            
+            // Clear cart and show confirmation
+            cart = [];
+            updateCart();
+            cartModal.classList.add('hidden');
+            orderConfirmation.classList.remove('hidden');
+        });
+
+        // Submit catering form
+        cateringForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In a real app, you would send this data to your backend
+            console.log('Catering request submitted:', {
+                name: document.getElementById('cateringName').value,
+                email: document.getElementById('cateringEmail').value,
+                phone: document.getElementById('cateringPhone').value,
+                company: document.getElementById('cateringCompany').value,
+                date: document.getElementById('cateringDate').value,
+                guests: document.getElementById('cateringGuests').value,
+                details: document.getElementById('cateringDetails').value
+            });
+            
+            // Show confirmation and reset form
+            cateringModal.classList.add('hidden');
+            cateringConfirmation.classList.remove('hidden');
+            this.reset();
+        });
+
+        // Submit contact form
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In a real app, you would send this data to your backend
+            console.log('Contact form submitted:', {
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                phone: document.getElementById('contactPhone').value,
+                message: document.getElementById('contactMessage').value
+            });
+            
+            // Show confirmation and reset form
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Cart modal
+            cartBtn.addEventListener('click', () => cartModal.classList.remove('hidden'));
+            closeCartBtn.addEventListener('click', () => cartModal.classList.add('hidden'));
+            
+            // Catering modal
+            openCateringForm.addEventListener('click', () => cateringModal.classList.remove('hidden'));
+            closeCateringForm.addEventListener('click', () => cateringModal.classList.add('hidden'));
+            
+            // Confirmation modals
+            closeOrderConfirmation.addEventListener('click', () => orderConfirmation.classList.add('hidden'));
+            closeCateringConfirmation.addEventListener('click', () => cateringConfirmation.classList.add('hidden'));
+            
+            // Mobile menu
+            mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            
+            // Close modals when clicking outside
+            [cartModal, cateringModal, orderConfirmation, cateringConfirmation].forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+        }
+
+        // Make functions available globally
+        window.addToCart = addToCart;
+        window.updateQuantity = updateQuantity;
+        window.removeFromCart = removeFromCart;
+        window.filterMenu = filterMenu;
+    </script>
+</body>
+</html>
